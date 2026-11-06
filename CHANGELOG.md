@@ -2,6 +2,17 @@
 
 This project uses Semantic Versioning: MAJOR.MINOR.PATCH, with a suffix such as `-beta.1` for test releases.
 
+## [0.2.0-beta.1] - 2026-11-06
+
+### Added
+- One-tap story maker: pick a story, friend, lesson, language, age and length, and the app makes the whole book with pictures, offline.
+- Surprise me button for a random book.
+- Eight stories in English, Filipino and Taglish.
+
+### Changed
+- New bright home screen and two-column bookshelf for phones.
+- Books are saved and opened right after they are made.
+
 ## [0.1.0-beta.1] - 2026-11-06
 
 First test release. Not yet tested on a real phone.

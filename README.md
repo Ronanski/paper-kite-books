@@ -14,6 +14,7 @@ The change to `version.properties` starts the workflow. It builds the APK, creat
 
 ## Project layout
 - `tools/paper-kite-books.html`: the app itself.
+- `tools/story-engine.js`: the offline story and picture maker.
 - `tools/native-shim.js`: connects reading aloud to Android.
 - `tools/build_assets.py`: builds the page that goes inside the app.
 - `app/`: the Android project.

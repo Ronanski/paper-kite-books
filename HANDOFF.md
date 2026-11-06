@@ -1,6 +1,6 @@
 # Handoff
 
-Current version: 0.1.0-beta.1 (pre-release).
+Current version: 0.2.0-beta.1 (pre-release).
 
 ## Status
 - Releases start automatically when `version.properties` changes on `main`.

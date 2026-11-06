@@ -170,12 +170,42 @@ dialog::backdrop { background: var(--scrim); }
 .bk.end { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3cqw; }
 .bk.end b { font-family: var(--font-display); font-size: 10cqw; font-weight: 800; }
 
-/* Android app: portrait book pages */
+/* Android app: portrait book pages and a bright, child-friendly home */
+.native .mast { padding-block: 0 12px; }
+.native .brand svg { width: 42px; height: 52px; }
+.native .brand h1 { font-size: 1.7rem; }
+.native .brand p { display: none; }
+.hero { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 10px; align-items: center; padding: 14px; margin-block: 0 22px; border-radius: 14px; background: var(--sun); color: var(--on-sun); }
+.hero img { width: 100%; display: block; }
+.hero h2 { font-size: 1.7rem; font-weight: 800; }
+.hero p { margin: 4px 0 0; }
+.hero-acts { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.hero .btn { min-height: 54px; font-size: 1.05rem; border-color: var(--on-sun); }
+.hero .btn.primary { background: var(--accent); border-color: var(--accent); }
+.hero .btn.quiet { grid-column: 1 / -1; min-height: 38px; border-color: transparent; color: var(--on-sun); font-size: .95rem; }
+.shelf-h { font-size: 1.3rem; margin: 0 0 12px; }
+.native .shelf { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.native .slot-top { padding: 0 10px; }
+.native .slot-meta { padding: 8px 10px 22px; }
+.native .slot-title { font-size: .98rem; }
+.native .slot-acts .btn { flex: 1; min-height: 38px; padding: 2px 6px; }
+#genDlg { width: calc(100vw - 16px); max-width: 640px; padding: 16px; }
+.pick { display: grid; gap: 8px; }
+.pick h3 { font-size: 1.1rem; }
+.chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.chips.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.chip { display: flex; align-items: center; gap: 8px; min-height: 52px; min-width: 0; padding: 6px 8px; border: 2px solid var(--line); border-radius: 10px; background: var(--surface); font-weight: 700; font-size: .95rem; line-height: 1.15; text-align: left; cursor: pointer; }
+.chip img { width: 38px; height: 38px; flex: none; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--sky); box-shadow: inset 0 0 0 1px var(--accent); }
+.chips.three .chip { justify-content: center; text-align: center; }
+.gen-go { position: sticky; bottom: -16px; display: grid; grid-template-columns: auto 1fr; gap: 8px; padding-block: 10px; background: var(--surface); }
+.gen-go .btn.primary { min-height: 54px; font-size: 1.1rem; }
 .native .bk { aspect-ratio: 3 / 4; }
 .native .bk-page.side { grid-template-columns: 1fr; grid-template-rows: 66% 34%; }
 .native .bk-page.side .bk-text { text-align: center; }
 .native .rd-page { width: min(100cqw, 75cqh); }
 .native #pad { aspect-ratio: 3 / 4; }
+.native #reader { background: #18245C; }
 
 #toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 70; max-width: calc(100vw - 32px); padding: 10px 16px; border-radius: 8px; background: var(--ink); color: var(--sky); font-weight: 700; text-align: center; }
 
@@ -212,6 +242,16 @@ dialog::backdrop { background: var(--scrim); }
         <button id="newBtn" class="btn primary" type="button">Make a new book</button>
       </div>
     </header>
+    <section id="hero" class="hero" hidden>
+      <img id="heroTiko" alt="Tiko the tarsier waving">
+      <div><h2>Hi, I'm Tiko!</h2><p>Pick a story and I will make the whole book.</p></div>
+      <div class="hero-acts">
+        <button id="heroMake" class="btn primary" type="button">Make a story</button>
+        <button id="heroSurprise" class="btn" type="button">Surprise me</button>
+        <button id="heroOwn" class="btn quiet" type="button">Write my own book</button>
+      </div>
+    </section>
+    <h2 id="shelfHead" class="shelf-h" hidden>My books</h2>
     <p id="storeNote" class="banner" hidden></p>
     <div id="shelf" class="shelf" aria-live="polite"></div>
   </section>
@@ -253,6 +293,17 @@ dialog::backdrop { background: var(--scrim); }
     <button id="rdClose" class="btn" type="button">Close book</button>
   </div>
 </div>
+
+<dialog id="genDlg">
+  <div class="dlg">
+    <h2>Make a story</h2>
+    <div id="genPicks" class="dlg"></div>
+    <div class="gen-go">
+      <button id="genCancel" class="btn quiet" type="button">Cancel</button>
+      <button id="genMake" class="btn primary" type="button">Make my book</button>
+    </div>
+  </div>
+</dialog>
 
 <dialog id="newDlg">
   <form id="newForm" class="dlg" method="dialog">
@@ -345,7 +396,7 @@ function h(tag, attrs, ...kids) {
 }
 
 const NATIVE = !!window.AndroidBridge;
-if (NATIVE) document.documentElement.classList.add('native');
+if (NATIVE) { document.documentElement.classList.add('native'); document.documentElement.dataset.theme = 'light'; }
 const COVERS = [
   ['#2F6FD6', '#FFFFFF'], ['#D8234F', '#FFFFFF'], ['#FFC63A', '#18245C'],
   ['#0E7A62', '#FFFFFF'], ['#18245C', '#FFFFFF'], ['#F58A2E', '#18245C'], ['#7C3AB8', '#FFFFFF'],
@@ -513,7 +564,7 @@ async function start() {
   applyAccess(); renderShelf();
 }
 function applyAccess() {
-  $('#newBtn').hidden = app.readOnly;
+  $('#newBtn').hidden = app.readOnly || NATIVE;
   $('#nbFields').hidden = !app.sample; $('#nbWrite').hidden = !app.sample;
   $('#nbIntro').textContent = app.sample ? 'Tell Claude your idea and it writes the story. You can change every word after.' : 'Add your own words and pictures, one page at a time.';
   const n = $('#storeNote');
@@ -530,7 +581,8 @@ function renderShelf() {
   const sorted = [...app.books].sort((a, b) => b.updatedAt - a.updatedAt);
   const list = sorted.filter(b => !q || (b.title + ' ' + b.author).toLowerCase().includes(q));
   if (app.slow) box.append(h('p', { class: 'empty' }, 'Still connecting. This list may be out of date.'));
-  if (!app.readOnly && !q) box.append(h('div', { class: 'slot' },
+  if (NATIVE) { $('#search').hidden = app.books.length < 7; $('#shelfHead').hidden = !app.books.length; }
+  if (!app.readOnly && !q && !NATIVE) box.append(h('div', { class: 'slot' },
     h('div', { class: 'slot-top' }, h('button', { class: 'new-tile', type: 'button', onclick: openNew }, 'New book', h('span', {}, app.sample ? 'Write it yourself or with Claude' : 'Write and draw it yourself'))),
     h('div', { class: 'plank' }),
     h('div', { class: 'slot-meta' }, h('div', { class: 'slot-sub' }, list.length === 1 ? '1 book on your shelf' : `${list.length} books on your shelf`))));
@@ -544,7 +596,7 @@ function renderShelf() {
         h('div', { class: 'slot-title' }, b.title),
         h('div', { class: 'slot-sub' }, sub.join(' · '), b.sample ? h('span', { class: 'pill' }, 'Sample') : null),
         h('div', { class: 'slot-acts' },
-          h('button', { class: 'btn small sun', type: 'button', onclick: () => openReader(b) }, 'Read'),
+          NATIVE ? null : h('button', { class: 'btn small sun', type: 'button', onclick: () => openReader(b) }, 'Read'),
           app.readOnly ? null : h('button', { class: 'btn small', type: 'button', onclick: () => openEditor(b) }, 'Edit'),
           app.readOnly ? null : h('button', { class: 'btn small danger', type: 'button', onclick: () => askDelete(b) }, 'Delete')))));
   }
@@ -1194,6 +1246,37 @@ window.__back = () => {
   return false;
 };
 $('#tikoBadge').innerHTML = TIKO_SVG;
+(function setupGenerator() {
+  const T = window.TikoBooks; if (!T) return;
+  const svgUrl = s => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s);
+  const picks = { theme: T.themes[0].id, friend: T.friends[0].id, lesson: T.lessons[0].id, age: '4-6', pages: '8', language: 'Filipino' };
+  const groups = [
+    ['What is the story about?', 'theme', T.themes.map(t => [t.id, t.name, svgUrl(T.propIcon(t.id))]), ''],
+    ["Who is Tiko's friend?", 'friend', T.friends.map(f => [f.id, f.name, svgUrl(T.friendIcon(f.id))]), ''],
+    ['What will Tiko learn?', 'lesson', T.lessons.map(l => [l.id, l.name]), ''],
+    ['Language', 'language', T.languages.map(l => [l, l]), 'three'],
+    ["Child's age", 'age', [['2-4', '2 to 4'], ['4-6', '4 to 6'], ['6-8', '6 to 8']], 'three'],
+    ['Pages', 'pages', [['6', '6'], ['8', '8'], ['10', '10']], 'three'],
+  ];
+  function draw() {
+    $('#genPicks').replaceChildren(...groups.map(([title, key, items, cls]) => h('section', { class: 'pick' }, h('h3', {}, title),
+      h('div', { class: 'chips ' + cls, role: 'group', 'aria-label': title }, items.map(([id, name, icon]) => h('button', { class: 'chip', type: 'button', 'aria-pressed': String(picks[key] === id), onclick: () => { picks[key] = id; draw(); } }, icon ? h('img', { src: icon, alt: '' }) : null, name))))));
+  }
+  async function make(opts) {
+    try {
+      const book = normalize(T.generate(opts));
+      await putBook(book);
+      openReader(book);
+    } catch (e) { toast('The book was not saved. Free up some space on your phone and try again.'); }
+  }
+  $('#heroTiko').src = svgUrl(T.tiko('happy'));
+  $('#hero').hidden = false;
+  $('#heroMake').onclick = () => { draw(); $('#genDlg').showModal(); };
+  $('#heroSurprise').onclick = () => make({ language: picks.language, age: picks.age });
+  $('#heroOwn').onclick = openNew;
+  $('#genCancel').onclick = () => $('#genDlg').close();
+  $('#genMake').onclick = async () => { $('#genDlg').close(); await make({ ...picks }); };
+})();
 $('#newBtn').onclick = openNew;
 $('#search').addEventListener('input', renderShelf);
 start();

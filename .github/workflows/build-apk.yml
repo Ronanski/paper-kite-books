@@ -27,6 +27,16 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+      - name: Get the open-license fonts
+        continue-on-error: true
+        run: |
+          d=app/src/main/assets/fonts; mkdir -p $d
+          b=https://github.com/google/fonts/raw/main/ofl
+          curl -fsSL -o $d/Grandstander.ttf "$b/grandstander/Grandstander%5Bwght%5D.ttf"
+          curl -fsSL -o $d/Andika-Regular.ttf "$b/andika/Andika-Regular.ttf"
+          curl -fsSL -o $d/Andika-Bold.ttf "$b/andika/Andika-Bold.ttf"
+          curl -fsSL -o $d/Grandstander-OFL.txt "$b/grandstander/OFL.txt"
+          curl -fsSL -o $d/Andika-OFL.txt "$b/andika/OFL.txt"
       - run: python3 tools/build_assets.py
       - run: gradle :app:assembleDebug --no-daemon
       - name: Publish the release

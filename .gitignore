@@ -3,3 +3,4 @@ app/build/
 build/
 local.properties
 app/src/main/assets/index.html
+app/src/main/assets/fonts/
