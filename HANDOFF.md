@@ -8,5 +8,5 @@ Current version: 0.1.0-beta.1 (pre-release).
 
 ## Next
 - Test installing, saving after closing the app, voices, picture picking and PDF saving on a real phone.
-- This branch still needs `app/keystore/paperkite.jks`. Adding that key to the public repository needs the owner's approval. Do not publish this app in an app store with that key.
+- The signing key `app/keystore/paperkite.jks` is public in this repository by the owner's choice. Do not publish this app in an app store with this key.
 - A Stable release needs the owner's GO STABLE.
