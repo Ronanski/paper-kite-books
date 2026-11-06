@@ -14,21 +14,16 @@ android {
         versionName version.getProperty('VERSION_NAME')
     }
     signingConfigs {
-        // Used only when the private key is supplied by the build. It is never stored in this repository.
+        // Every release must use this same key. Android only accepts an update with a matching signature.
         fixed {
-            def key = System.getenv('SIGNING_KEY_FILE')
-            if (key) {
-                storeFile file(key)
-                storePassword System.getenv('SIGNING_PASSWORD')
-                keyAlias System.getenv('SIGNING_ALIAS')
-                keyPassword System.getenv('SIGNING_PASSWORD')
-            }
+            storeFile file('keystore/paperkite.jks')
+            storePassword 'paperkite'
+            keyAlias 'paperkite'
+            keyPassword 'paperkite'
         }
     }
     buildTypes {
-        debug {
-            if (System.getenv('SIGNING_KEY_FILE')) signingConfig signingConfigs.fixed
-        }
+        debug { signingConfig signingConfigs.fixed }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

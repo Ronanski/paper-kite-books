@@ -1,7 +1,10 @@
 name: Release APK
-# Started by hand: Actions tab > Release APK > Run workflow.
-# It reads version.properties, then creates the matching tag and release.
+# Runs when version.properties changes on main, and can also be started by hand.
+# It reads the version, then creates the matching tag and release.
 on:
+  push:
+    branches: [main]
+    paths: [version.properties]
   workflow_dispatch:
 permissions:
   contents: write
@@ -14,7 +17,9 @@ jobs:
         run: |
           test "$GITHUB_REF_NAME" = main
           name=$(grep '^VERSION_NAME=' version.properties | cut -d= -f2)
+          code=$(grep '^VERSION_CODE=' version.properties | cut -d= -f2)
           echo "APP_VERSION=$name" >> "$GITHUB_ENV"
+          echo "APP_BUILD=$code" >> "$GITHUB_ENV"
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -28,7 +33,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          apk="PaperKiteBooks-v${APP_VERSION}.apk"
+          apk="PaperKiteBooks-v${APP_VERSION}-build${APP_BUILD}.apk"
           cp app/build/outputs/apk/debug/app-debug.apk "$apk"
           sha256sum "$apk" > "$apk.sha256"
           awk -v v="[$APP_VERSION]" 'index($0,"## " v)==1{f=1;next} /^## /{f=0} f' CHANGELOG.md > notes.md

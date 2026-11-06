@@ -38,6 +38,7 @@ public class MainActivity extends Activity {
     private volatile boolean ttsReady;
     private ValueCallback<Uri[]> pickCallback;
     private byte[] pendingFile;
+    private Updater updater;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -48,6 +49,7 @@ public class MainActivity extends Activity {
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
         s.setMediaPlaybackRequiresUserGesture(true);
+        s.setBlockNetworkLoads(true); // Only the update check uses the internet, never the page.
         web.addJavascriptInterface(new Bridge(), "AndroidBridge");
         web.setWebViewClient(new WebViewClient() {
             @Override
@@ -75,6 +77,20 @@ public class MainActivity extends Activity {
         setContentView(web);
         startVoices();
         web.loadUrl("file:///android_asset/index.html");
+        updater = new Updater(this);
+        updater.check();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updater.onShown();
+    }
+
+    @Override
+    protected void onStop() {
+        updater.onHidden();
+        super.onStop();
     }
 
     private void startVoices() {

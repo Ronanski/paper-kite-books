@@ -13,7 +13,8 @@ First test release. Not yet tested on a real phone.
 - Tiko the tarsier as the main character.
 - Reader with five read-aloud voices and word highlighting.
 - Save a book as a PDF.
+- Automatic updates from GitHub Releases. The app downloads a newer version and installs it after you leave the app.
 
 ### Known limits
 - Claude story writing and drawing are not in this offline app.
-- This test build has a temporary signature. Uninstall it before installing a later build, and back up anything important first, because uninstalling removes saved books.
+- Android asks for permission to install updates the first time, and may ask you to confirm an update. On Android 12 and newer, later updates can install without asking.
