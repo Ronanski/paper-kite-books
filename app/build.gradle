@@ -1,0 +1,37 @@
+plugins { id 'com.android.application' }
+
+def version = new Properties()
+rootProject.file('version.properties').withInputStream { version.load(it) }
+
+android {
+    namespace 'com.paperkite.books'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'com.paperkite.books'
+        minSdk 26
+        targetSdk 34
+        versionCode version.getProperty('VERSION_CODE') as int
+        versionName version.getProperty('VERSION_NAME')
+    }
+    signingConfigs {
+        // Used only when the private key is supplied by the build. It is never stored in this repository.
+        fixed {
+            def key = System.getenv('SIGNING_KEY_FILE')
+            if (key) {
+                storeFile file(key)
+                storePassword System.getenv('SIGNING_PASSWORD')
+                keyAlias System.getenv('SIGNING_ALIAS')
+                keyPassword System.getenv('SIGNING_PASSWORD')
+            }
+        }
+    }
+    buildTypes {
+        debug {
+            if (System.getenv('SIGNING_KEY_FILE')) signingConfig signingConfigs.fixed
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
