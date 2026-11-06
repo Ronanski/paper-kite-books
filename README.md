@@ -8,9 +8,10 @@ Download the APK from the Releases page and open it on an Android 8.0 or newer p
 ## Make a new release
 1. Update `version.properties`. Raise `VERSION_CODE` by 1 for every release.
 2. Add the new version to `CHANGELOG.md`.
-3. Commit, then push a tag that matches the version, such as `v0.1.0-beta.1`.
+3. Commit to `main`.
+4. On GitHub, open Actions, choose Release APK, then press Run workflow.
 
-The tag builds the APK and creates the GitHub release. A version with a suffix, such as `-beta.1`, becomes a pre-release.
+The workflow builds the APK, creates the version tag, and publishes the GitHub release. A version with a suffix, such as `-beta.1`, becomes a pre-release.
 
 ## Project layout
 - `tools/paper-kite-books.html`: the app itself.

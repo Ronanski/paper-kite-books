@@ -1,8 +1,8 @@
 name: Release APK
-# Runs when a version tag such as v0.1.0-beta.1 is pushed.
+# Started by hand: Actions tab > Release APK > Run workflow.
+# It reads version.properties, then creates the matching tag and release.
 on:
-  push:
-    tags: ['v*']
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Check that the tag matches version.properties
+      - name: Read the version
         run: |
+          test "$GITHUB_REF_NAME" = main
           name=$(grep '^VERSION_NAME=' version.properties | cut -d= -f2)
-          test "v$name" = "$GITHUB_REF_NAME"
           echo "APP_VERSION=$name" >> "$GITHUB_ENV"
       - uses: actions/setup-java@v4
         with:
@@ -33,4 +33,4 @@ jobs:
           sha256sum "$apk" > "$apk.sha256"
           awk -v v="[$APP_VERSION]" 'index($0,"## " v)==1{f=1;next} /^## /{f=0} f' CHANGELOG.md > notes.md
           flag=""; case "$APP_VERSION" in *-*) flag="--prerelease";; esac
-          gh release create "$GITHUB_REF_NAME" "$apk" "$apk.sha256" --title "Paper Kite Books v$APP_VERSION" --notes-file notes.md --verify-tag $flag
+          gh release create "v$APP_VERSION" "$apk" "$apk.sha256" --target "$GITHUB_SHA" --title "Paper Kite Books v$APP_VERSION" --notes-file notes.md $flag

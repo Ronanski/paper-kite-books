@@ -3,7 +3,7 @@
 Current version: 0.1.0-beta.1 (pre-release).
 
 ## Status
-- The first APK comes from the tag build. Check the Actions tab and Releases page for the result.
+- Start the first build from the Actions tab: Release APK > Run workflow.
 - Not yet tested on a real phone.
 
 ## Next
